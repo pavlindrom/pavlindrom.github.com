@@ -13,7 +13,7 @@
     <link rel="shortcut icon" href="/favicon.ico">
 
     <link rel="stylesheet" href="https://unpkg.com/tachyons@4.1.0/css/tachyons.min.css"/>
-    <link rel="stylesheet" type="text/css" href="/assets/css/app.css?v=56c5e48012" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/app.css?v=2b1cf91e68" />
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Lato:300,700,700italic,300italic" />
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/styles/grayscale.min.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/highlight.min.js"></script>
@@ -29,7 +29,7 @@
     <meta property="og:description" content="Blogging has many benefits, I hear. I don&#x27;t need to hear many to be sold - I need a low price tag. The blogging cost isn&#x27;t in the time it takes to write an article, not even that half of that time is spent writing the first few sentences, it&#x27;s" />
     <meta property="og:url" content="/running-a-blog-for-almost-nothing/" />
     <meta property="article:published_time" content="2017-01-21T04:57:42.000Z" />
-    <meta property="article:modified_time" content="2017-01-21T05:08:13.000Z" />
+    <meta property="article:modified_time" content="2017-01-28T23:46:08.000Z" />
     <meta property="article:tag" content="Getting Started" />
     <meta property="article:tag" content="Hosting" />
     
@@ -61,7 +61,7 @@
     "headline": "Running a Blog for (Almost) Nothing",
     "url": "/running-a-blog-for-almost-nothing/",
     "datePublished": "2017-01-21T04:57:42.000Z",
-    "dateModified": "2017-01-21T05:08:13.000Z",
+    "dateModified": "2017-01-28T23:46:08.000Z",
     "keywords": "Getting Started, Hosting",
     "description": "Blogging has many benefits, I hear. I don&#x27;t need to hear many to be sold - I need a low price tag. The blogging cost isn&#x27;t in the time it takes to write an article, not even that half of that time is spent writing the first few sentences, it&#x27;s",
     "mainEntityOfPage": {
@@ -118,8 +118,7 @@
 
 <p>Setting up the Pi is <a href="https://www.raspberrypi.org/documentation/setup/">pretty simple</a>. Once you have it running, connect it to wifi, and then you can easily SSH to make any changes.</p>
 
-<p>I suggest Avahi* - it lets me connect to the Pi using <code>{hostname}.local</code> just by running <code>sudo apt-get install avahi-daemon</code>. Since I have iTunes already installed on my Windows 10 machine, I can ping the Pi using both raspberrypi and raspberrypi.local. <em>Also, I'm glad I found about this before attempting to create a static IP, and learn of <a href="http://raspberrypi.stackexchange.com/questions/39785/dhcpcd-vs-etc-network-interfaces">all the ways</a> it doesn't work <a href="https://www.raspberrypi.org/forums/viewtopic.php?t=110557&amp;p=762332">just right</a> on the Pi</em>. I'd still like the 4 hours back, though. <br />
-<small>*See <a href="http://www.howtogeek.com/167190/how-and-why-to-assign-the-.local-domain-to-your-raspberry-pi/">this How-To Geek's blog</a> for details about the <em>.local</em> TLD.</small></p>
+<p>I suggest getting Avahi installed on the Pi - it lets me connect to the Pi using <code>{hostname}.local</code> just by running <code>sudo apt-get install avahi-daemon</code>, and having Apple's <a href="http://www.howtogeek.com/167190/how-and-why-to-assign-the-.local-domain-to-your-raspberry-pi/">Bonjour software installed</a>. <em>Also, I'm glad I found about this before attempting to create a static IP, and learn of <a href="http://raspberrypi.stackexchange.com/questions/39785/dhcpcd-vs-etc-network-interfaces">all the ways</a> it doesn't work <a href="https://www.raspberrypi.org/forums/viewtopic.php?t=110557&amp;p=762332">just right</a> on the Pi</em>. I'd still like the 4 hours back, though.</p>
 
 <h4 id="theghostpublishingplatform">The Ghost Publishing Platform</h4>
 
@@ -145,20 +144,20 @@
 
 <p>Linux has <code>wget</code> which downloads a file. With a few flags, I can make a copy of the website locally:  </p>
 
-<pre><code>wget -rp --content-disposition /  
+<pre><code>wget -rp --content-disposition http://{hostname}.local  
 </code></pre>
 
-<p>That will follow and download all links recursively (<code>-r</code>), all required resource, such as CSS and JavaScript files (<code>-p</code>), and save the Content-Disposition MIME type (<code>--content-disposition</code>) if they are on the domain <code>/</code>.</p>
+<p>That will follow and download all links recursively (<code>-r</code>), all required resource, such as CSS and JavaScript files (<code>-p</code>), and save the Content-Disposition MIME type (<code>--content-disposition</code>) if they are on the domain <code>http://{hostname}.local</code>.</p>
 
 <p>I hope that the Content-Disposition will be handled correctly, GitHub claims they <a href="https://help.github.com/articles/mime-types-on-github-pages/">support the feature</a>, with Nginx in the text on the page. I don't know how to test it, and it hasn't broken the page in browsing the website.</p>
 
-<p>Once this command finishes, there is a folder <code>raspberrypi.local</code> in the current directory (I decided to do it under <code>/var/www/ghost</code>).</p>
+<p>Once this command finishes, there is a folder <code>{hostname}.local</code> in the current directory (I decided to do it under <code>/var/www/ghost</code>).</p>
 
 <h4 id="fixfilenames">Fix File Names</h4>
 
 <p>Ghost requests CSS and JavaScript pages using a querystring version parameter to bust caches. They can be removed with:  </p>
 
-<pre><code>find ./raspberrypi.local -name '*\?*' -type f | while read -r name  
+<pre><code>find ./{hostname}.local -name '*\?*' -type f | while read -r name  
 do  
     mv -i "$name" "${name%\?*}"
 done  
@@ -166,9 +165,9 @@ done
 
 <h4 id="makelinksrelative">Make Links Relative</h4>
 
-<p>Some links are also pointing to <code>/</code>, which is only accessible from the local network. Changing all links to be relative will allow me to host it anywhere I please. Here's how:  </p>
+<p>Some links are also pointing to <code>http://{hostname}.local</code>, which is only accessible from the local network. Changing all links to be relative will allow me to host it anywhere I please. Here's how:  </p>
 
-<pre><code>find ./raspberrypi.local -type f -exec sed -i 's/http:\/\/raspberrypi\.local\//\//g' {} +  
+<pre><code>find ./{hostname}.local -type f -exec sed -i 's/http:\/\/{hostname}\.local\/\?/\//g' {} +  
 </code></pre>
 
 <p>You can easily change it to a custom domain instead of relative links. There may be a reason to do that, and I don't know it.</p>
@@ -177,13 +176,13 @@ done
 
 <p>Now that the files are correctly formatted, and linked, we can publish. The first step is to copy the static pages into the local GitHub Pages repository, then delete (outright move didn't work, for unknown reasons):  </p>
 
-<pre><code>cp -r ./raspberrypi.local/* /usr/src/pavlindrom.github.com  
-rm -rf ./raspberrypi.local  
+<pre><code>cp -r ./{hostname}.local/* /usr/src/{username}.github.com  
+rm -rf ./{hostname}.local  
 </code></pre>
 
 <p>Then commit the changes:  </p>
 
-<pre><code>cd /usr/src/pavlindrom.github.com  
+<pre><code>cd /usr/src/{username}.github.com  
 git add -A  
 git commit -m"Blog publish"  
 git push  
@@ -205,65 +204,71 @@ pm2 start ghost
 
 <h3 id="conclusion">Conclusion</h3>
 
-<p>Here is the final script, <code>publish.sh</code>, which I placed at the root of my blog:  </p>
+<p>That is it. The setup has its challenges, and it has been a good source of confusion as I worked through it. I could not detail all the things that I have come across as I worked, primarily because I haven't kept a list, but also since all the solutions to the problems are easy to find with Google, or a comparable web search engine.</p>
+
+<p>The script to take the website from the local host to the internet is then straightforward. I have modified it one bit - instead of using a generic commit message (it doesn't look in the log), I'm able to send a custom commit message to the script. And that's a significant improvement.</p>
+
+<p>Speaking of the script, here it is, ready for you to replace <code>{hostname}</code> and <code>{username}</code> with the correct values, and use to share your insights with the world at large:  </p>
 
 <pre><code># Create static copy
-wget -rp --content-disposition /
+wget -rp --content-disposition http://{hostname}.local
 
 # Fix file names
-find ./raspberrypi.local -name '*\?*' -type f | while read -r name  
+find ./{hostname}.local -name '*\?*' -type f | while read -r name  
 do  
     mv -i "$name" "${name%\?*}"
 done
 
 # Update URLs
-find ./raspberrypi.local -type f -exec sed -i 's/http:\/\/raspberrypi\.local\//\//g' {} +
+find ./{hostname}.local -type f -exec sed -i 's/http:\/\/{hostname}\.local\/\?/\//g' {} +
 
 # Publish blog
-cp -r ./raspberrypi.local/* /usr/src/pavlindrom.github.com  
-rm -rf ./raspberrypi.local  
-cd /usr/src/pavlindrom.github.com  
+cp -r ./{hostname}.local/* /usr/src/{username}.github.com  
+rm -rf ./{hostname}.local  
+cd /usr/src/{username}.github.com  
 git add -A  
-git commit -m"Blog publish"  
+git commit -m"$1"  
 git push
 
 # Backup entire blog
 cd /var/www/ghost  
 runuser -l pi -c 'pm2 stop ghost'  
 git add -A  
-git commit -m"Backup on publish"  
+git commit -m"$1"  
 git push  
 runuser -l pi -c 'pm2 start ghost'  
 </code></pre>
 
-<p>The final step is to make the file executable with <code>sudo chmod +x ./publish.sh</code>. Now you can run it as <code>sudo sh ./publish.sh</code>.</p>
+<p>The final step is to make the file executable with <code>sudo chmod +x ./publish.sh</code>. Now you can run it as <code>sudo sh ./publish.sh "Commit message"</code>.</p>
 
-<p>I haven't grasped permissions in Linux yet, and sudo still solves all my problems - except where it doesn't. In the above script I am switching the user back from <code>root</code> to <code>pi</code> since pm2 doesn't find the requested process if it's running as root. The quick and dirty solution isn't pretty, but it's a solution. </p>
+<p>I haven't grasped permissions in Linux yet, and sudo still solves all my problems - except where it doesn't. In the above script I am switching the user back from <code>root</code> to <code>pi</code> (or whatever other user you have created for the purpose of running ghost), since pm2 doesn't find the requested process if it's running as root. The quick and dirty solution isn't pretty, but it's a solution. </p>
 
 <h4 id="advantages">Advantages</h4>
 
 <ul>
 <li><strong>Cost</strong>: hosting is free. The only thing I pay for is the domain.</li>
 <li><strong>Security</strong>: without a password-protected area, I don't have to worry about someone gaining access to the admin portal and defacing the website.</li>
+<li><strong>Change Tracking</strong>: I mean, isn't it great that I can say I updated this blog post, and have a link that shows all changes? Yes, it is. Thanks, GitHub Pages.</li>
 </ul>
 
 <h4 id="disadvantages">Disadvantages</h4>
 
 <ul>
 <li><strong>Added Complexity</strong>: it's not an update it and forget it workflow. After every update I need to remember to publish.</li>
-<li><strong>Limited Personal Mobility</strong>: I can't update the blog from anywhere, I need to be able to access to home network for every update. Urgent fixes can be made by editing the HTML, but the same change must be made in ghost admin once I return home.</li>
+<li><strong>Content Frozen</strong>: I can't update the blog from anywhere, I need to be able to access the home network for every update. Urgent fixes can be made by editing the HTML, but the same change must be made in ghost admin once I return home.</li>
 <li><strong>Security</strong>: By using GitHub Pages with a custom domain I don't have SSL/TLS to secure the data in passing. Not a huge issue since there are no password-protected areas, but it's still not desirable.</li>
+<li><strong>Dynamic Content</strong>: Since I'm saving a static copy of the website I can't rely on endpoints to receive data. I'd have to use Amazon's Lambdas, or Azure's Functions (which I wouldn't mind playing with).</li>
 </ul>
 
 <h4 id="lookingforward">Looking Forward</h4>
 
-<p>There are a number of things that can be improved, and the biggest that I can see is the need to <code>sudo</code> everything, except where I can't, so I need to <em>unsudo</em> for a few lines.</p>
+<p>There are a number of things that can be improved, and the biggest that I can see is the need to <code>sudo</code> everything, except where I can't, so I need to <em>unsudo</em> for a few lines. </p>
 
-<p>I'm also thinking of eventually moving the hosting to Amazon S3. That way I will be able to get a free certificate, and total hosting cost should stay low - at a few cents a month.</p>
+<p>I'm also thinking of eventually moving the hosting to Amazon S3. That way I will be able to get a <a href="https://aws.amazon.com/certificate-manager/pricing/">free SSL certificate</a>, and the cost of hosting a static website should stay low - at a few cents a month.</p>
 
 <h3 id="finalremarks">Final Remarks</h3>
 
-<p><img src="/content/images/2017/01/WP_20170108_14_21_58_Pro.jpg" alt="" /></p>
+<p><img src="/content/images/2017/01/WP_20170108_14_21_58_Pro.jpg" alt="Wing it." /></p>
 
 <p>I winged it - and so can you. With just one blog post under my wings I can tell you that there's a great reason to start blogging - to learn how much more there is to learn.</p>
 
@@ -290,7 +295,7 @@ runuser -l pi -c 'pm2 start ghost'
     </footer>
 
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
-    <script type="text/javascript" src="/assets/js/scripts.js?v=56c5e48012"></script>
+    <script type="text/javascript" src="/assets/js/scripts.js?v=2b1cf91e68"></script>
     <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
