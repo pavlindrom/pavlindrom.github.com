@@ -20,7 +20,7 @@
     <meta property="og:description" content="Blogging has many benefits, I hear. I don&#x27;t need to hear many to be sold - I need a low price tag. The blogging cost isn&#x27;t in the time it takes to write an article, not even that half of that time is spent writing the first few sentences, it&#x27;s" />
     <meta property="og:url" content="/running-a-blog-for-almost-nothing/" />
     <meta property="article:published_time" content="2017-01-21T04:57:42.000Z" />
-    <meta property="article:modified_time" content="2017-01-28T23:57:30.000Z" />
+    <meta property="article:modified_time" content="2017-01-29T00:13:07.000Z" />
     <meta property="article:tag" content="Getting Started" />
     <meta property="article:tag" content="Hosting" />
     
@@ -52,7 +52,7 @@
     "headline": "Running a Blog for (Almost) Nothing",
     "url": "/running-a-blog-for-almost-nothing/",
     "datePublished": "2017-01-21T04:57:42.000Z",
-    "dateModified": "2017-01-28T23:57:30.000Z",
+    "dateModified": "2017-01-29T00:13:07.000Z",
     "keywords": "Getting Started, Hosting",
     "description": "Blogging has many benefits, I hear. I don&#x27;t need to hear many to be sold - I need a low price tag. The blogging cost isn&#x27;t in the time it takes to write an article, not even that half of that time is spent writing the first few sentences, it&#x27;s",
     "mainEntityOfPage": {
@@ -1003,7 +1003,7 @@ runuser -l pi -c 'pm2 start ghost'
 <ul>
 <li><strong>Cost</strong>: hosting is free. The only thing I pay for is the domain.</li>
 <li><strong>Security</strong>: without a password-protected area, I don't have to worry about someone gaining access to the admin portal and defacing the website.</li>
-<li><strong>Change Tracking</strong>: I mean, isn't it great that I can say I updated this blog post, and have a link that shows all changes? Yes, it is. Thanks, GitHub Pages.</li>
+<li><strong>Change Tracking</strong>: I mean, isn't it great that I can say I updated this blog post, and have a <a href="/running-a-blog-for-almost-nothing/this will be replaced with a compare - it's not in the source control because I have to make this commit, copy the hash into the blog, then update it once again - does that warrant this being a disadvantage?">link that shows all changes</a>? Yes, it is. Thanks, GitHub Pages.</li>
 </ul>
 
 <h4 id="disadvantages">Disadvantages</h4>
@@ -1011,7 +1011,7 @@ runuser -l pi -c 'pm2 start ghost'
 <ul>
 <li><strong>Added Complexity</strong>: it's not an update it and forget it workflow. After every update I need to remember to publish.</li>
 <li><strong>No Travelling Allowed</strong>: I can't update the blog from anywhere, I need to be able to access the home network for every update. Urgent fixes can be made by editing the HTML, but the same change must be made in ghost admin once I return home.</li>
-<li><strong>Security</strong>: By using GitHub Pages with a custom domain I don't have SSL/TLS to secure the data in passing. Not a huge issue since there are no password-protected areas, but it's still not desirable.</li>
+<li><strong>No Secure Connection</strong>: By using GitHub Pages with a custom domain I don't have SSL/TLS to secure the data in passing. Not a huge issue since there are no password-protected areas, but it's still not desirable.</li>
 <li><strong>No Dynamic Content</strong>: Since I'm saving a static copy of the website I can't rely on endpoints to receive data. I'd have to use Amazon's Lambdas, or Azure's Functions (which I wouldn't mind playing with).</li>
 </ul>
 
