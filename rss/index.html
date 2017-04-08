@@ -1,4 +1,110 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:media="http://search.yahoo.com/mrss/"><channel><title><![CDATA[Pavlo Grijincu]]></title><description><![CDATA[Yet another beginner's programming adventures.]]></description><link>/</link><generator>Ghost 0.11</generator><lastBuildDate>Sun, 29 Jan 2017 00:19:34 GMT</lastBuildDate><atom:link href="/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Running a Blog for (Almost) Nothing]]></title><description><![CDATA[<p>Blogging has many benefits, I hear. I don't need to hear many to be sold - I need a low price tag. The blogging cost isn't in the time it takes to write an article, not even that half of that time is spent writing the first few sentences, it's</p>]]></description><link>/running-a-blog-for-almost-nothing/</link><guid isPermaLink="false">744716aa-c37b-48b0-9e0e-32d700a1a547</guid><category><![CDATA[Getting Started]]></category><category><![CDATA[Hosting]]></category><dc:creator><![CDATA[Pavlo Grijincu]]></dc:creator><pubDate>Sat, 21 Jan 2017 04:57:42 GMT</pubDate><content:encoded><![CDATA[<p>Blogging has many benefits, I hear. I don't need to hear many to be sold - I need a low price tag. The blogging cost isn't in the time it takes to write an article, not even that half of that time is spent writing the first few sentences, it's for the machine that must stay up at all times for the visitor.</p>
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:media="http://search.yahoo.com/mrss/"><channel><title><![CDATA[Pavlo Grijincu]]></title><description><![CDATA[Your Friendly Code Nerd.]]></description><link>/</link><generator>Ghost 0.11</generator><lastBuildDate>Sat, 08 Apr 2017 21:30:43 GMT</lastBuildDate><atom:link href="/rss/" rel="self" type="application/rss+xml"/><ttl>60</ttl><item><title><![CDATA[Towards a Big Picture View of Software]]></title><description><![CDATA[<p>I like technologies, and seem to be in near-constant search for the one thing that I am not aware of that could change how I develop forever. When I’ve found out about graph databases, I was ecstatic that now I can model my application’s data intuitively. When I</p>]]></description><link>/towards-a-big-picture-view-of-software/</link><guid isPermaLink="false">63077a06-c2f3-4534-886f-2ddef635a0a0</guid><dc:creator><![CDATA[Pavlo Grijincu]]></dc:creator><pubDate>Sat, 08 Apr 2017 19:44:12 GMT</pubDate><content:encoded><![CDATA[<p>I like technologies, and seem to be in near-constant search for the one thing that I am not aware of that could change how I develop forever. When I’ve found out about graph databases, I was ecstatic that now I can model my application’s data intuitively. When I learned about Roslyn, I envisioned a future where the code would flag everything I needed to think about. After seeing demos of AWS Lambda, and hearing some anecdotes about the cost savings, I was all in with whatever small project I was to take on. Sitting in a conference room, and learning about Azure Service Fabric, I decided to give this thing a whirl as it will make everything better.</p>
+
+<p>I have played with all of the above, and have come to the age-old conclusion that a framework, or a platform, is just a tool to build a product. A choice will result in different code, but the same user interface, broadly speaking. All software has areas to read from, write in, and click on.</p>
+
+<p>The search for the greatest technology stack is useless. The aftermath of that realization is a new vision.</p>
+
+<h3 id="buildingonsyntaxtrees">Building on Syntax Trees</h3>
+
+<p>Source code is the description of a process targeted towards computers and developers. A machine will look at it as a syntax tree, and create an executable that will follow the recipe laid down. A developer will read the same code but create a mental model that is far richer, from which they form connections to other systems around it.</p>
+
+<p>This is the attempt to encode all the understanding that developers have amassed through experience with a certain technology stack. The means of reaching that goal is to load the syntax trees into a graph database, allowing for plug-ins to connect any parts together as higher level concepts derived from it. A simple example is to take <code>public class MyClass</code>, and end up with the following:</p>
+
+<p><img src="/content/images/2017/04/SimpleTree.PNG" alt="Simple Tree"></p>
+
+<p>As it turns out, there are a great deal of open source projects that turn source code into syntax trees. Here are some I’ve found in a matter of minutes:</p>
+
+<ul>
+<li><a href="https://roslyn.io">Roslyn</a> - the official compiler as a platform from Microsoft, supporting C# and Visual Basic.</li>
+<li><a href="https://github.com/javaparser/javaparser">Javaparser</a> - supports Java 1.8, so I assume that the older versions of Java will also work.</li>
+<li><a href="https://astexplorer.net/">Javascript AST Explorer</a> - shows the syntax tree from many JavaScript parsers - who but JavaScript can have so many implementations?</li>
+<li><a href="https://github.com/nikic/PHP-Parser">PHP-Parser</a> - another widely used language of the web, it merits inclusion simply due to existing.</li>
+<li><a href="http://search.cpan.org/~dedmedved/TSQL-AST-0.04/lib/TSQL/AST.pm">TSQL::AST</a> - an alpha release of a TSQL parser, an exciting hope of being able to parse logic contained within SQL queries.</li>
+</ul>
+
+<p>That is a rather good list of projects to begin exploring.</p>
+
+<h3 id="connectingconcepts">Connecting Concepts</h3>
+
+<p>Here are the higher level concepts that I believe every developer constructs as they read source code. In this section I will get fairly excited about the opportunities that I can think of, as you’ll see from the use cases. The hope is that this information will be useful in all development activities: comprehending, troubleshooting, and extending code.</p>
+
+<h4 id="typemetadata">Type Metadata</h4>
+
+<p>Object oriented programming (OOP) is standard practice in software development today. Languages also provide a lot of different flavors of code organization techniques - interfaces, abstract classes, inheritance, annotations, methods, access modifiers, etc. This step is simply the extraction of that information in a language-agnostic model. All that means is that the nodes be consistent across languages, meaning that a class be named a class, even if in a language it’s called a type (or maybe it’s the other way around).</p>
+
+<p><strong>Use Case</strong>: A browser plugin-in that matches the classes and methods used to a project, and links to the implementation.</p>
+
+<h4 id="usageinformation">Usage Information</h4>
+
+<p>Software isn’t executed in a linear fashion. That is another benefit of OOP - that functionally related code is usually found together. This is just a little bit of a nuissance in troubleshooting: to find what code runs in a process, the developer jumps between methods, classes, and packages.</p>
+
+<p>To compile this data all variables should be assigned a class. Then any method calls, and what parameters are passed in, need to be stored.</p>
+
+<p><strong>Use Case</strong>: A view that allows for methods to be "expanded" inside other methods (with the exception of recursive methods).</p>
+
+<h4 id="logicallydatadriven">Logically Data-Driven</h4>
+
+<p>Within each method is the logic of the software, cleverly expressed in the constructs defined by each language. All that ingenuity, though, can be simplified into basic computer logic. An example would be to convert something innocent like <code>var result = someValue || someMethod();</code> into  </p>
+
+<pre><code>var result = false;  
+if (someValue) {  
+  result = true;
+}
+else if (someMethod()) {  
+  result = true;
+}
+</code></pre>
+
+<p>The end result is code that is easy to interpret, even if it’s more verbose.</p>
+
+<p>Data is the counterpart to logic. In order to correctly understand any code, data needs to be traceable throughout it, from the point of ingestion to its output, be it a database or one of those reports without which no customer is happy. All we need from data is to know when a value is converted to another type, copied into another memory address, or referenced from other methods.</p>
+
+<p><strong>Use Case</strong>: View the conditions that results in execution from some position A in code, and end at B, including loops.</p>
+
+<h4 id="threadmanagement">Thread Management</h4>
+
+<p>Programs are beginning to use the computer resources more efficiently by better use of threads. All the complex logic associated with thread management, be it asynchronous or parallel, needs be extracted from the source code.</p>
+
+<p>Asynchronous code is letting execution continue while a request for an external resource (e.g. an AJAX request for data) is being processed. Once it’s fulfilled, execution will continue from a specific location, with the response passed in. As such, to model asynchronous code we need to know what line of code execution continues with, the line of code to be resumed at, and how the data is made available to it.</p>
+
+<p>Parallel code is the request of more processing threads to run through a big set of data. What we need to know here is how threads are started, the data they are initialized with, and when they are joined back together. Data access should be modeled as well - whether that is done through a monitor, a lock, or directly.</p>
+
+<p><strong>Use Case</strong>: An analyzer that reveals potential race conditions, and variables that are accessed in different threads without proper access management.</p>
+
+<h4 id="interactivity">Interactivity</h4>
+
+<p>Probably the most fantastic concept - as in, containing the stuff fantasies are made of - is extracting all the ways software can be interacted with. All the inputs and events that cause some computation to initiate. This includes the entry point into the executable, port listeners, file watchers, queue processors, etc.</p>
+
+<p>Conversely, any instance where some software is using an external resource should be modeled as well. Here we mean just the trigger of the previous examples: running an executable, connecting to another machine, writing to a file, writing to a queue, etc.</p>
+
+<p><strong>Use Case</strong>: Reveal the effective dependencies in a system by matching process interactions over external resources.</p>
+
+<h4 id="moreusecases">More Use Cases</h4>
+
+<p>This is quite an undertaking, I will be the first to acknowledge that. Here are some appetizers, some carrots to reach for as the project is underway. These are the more advanced use cases that I would love to see:</p>
+
+<ul>
+<li><p>A nifty UI that displays how the data flows through the system, first at a high level, but with the ability to zoom in for the details.</p></li>
+<li><p>The ability to see how code is referenced and used system-wide, and highlight dead code.</p></li>
+<li><p>Deploy as serverless application, based on the information extracted in this project.</p></li>
+<li><p>Reveal possible security flaws in code, such as query injection attacks.</p></li>
+</ul>
+
+<p>Of course, these are just the ones I could think of. Which ones would you have liked to have when starting out as a software developer? Which ones would you have liked to have access to when you last tried to familiarize yourself with a company’s framework? Which ones would you experiment with, had the data been available now?</p>
+
+<h3 id="changetracking">Change Tracking</h3>
+
+<p>The project wouldn’t be complete without augmenting the power of source control. Modeling changes appropriately, from the source code, and across all information extracted from it, will make it possible to see how the entire system has been changed in a pull request, or how it has evolved over all time.</p>
+
+<p>Somewhat related is a module that tracks packages. The result is hard facts about how a package is used - the number of projects that use it, which classes are used most of the time, and which methods. That would equip the package writers with the knowledge necessary to focus on the areas that are most used.</p>
+
+<p>Change tracking is difficult, for which reason it will not be addressed from the concept stage. It is essential, so it will be eventually developed.</p>
+
+<h3 id="inconclusion">In Conclusion</h3>
+
+<p>And there you have it: a database of computing from which a beginner can learn a language’s intricacies, a troubleshooter can work towards an appropriate solution faster, a new employee can learn the company’s framework, and an architect can address issues in their framework as the code evolves.</p>
+
+<p>In the coming months I will further explore some of the ideas expressed here. In the mean time, let me know your thoughts below.</p>]]></content:encoded></item><item><title><![CDATA[Running a Blog for (Almost) Nothing]]></title><description><![CDATA[<p>Blogging has many benefits, I hear. I don't need to hear many to be sold - I need a low price tag. The blogging cost isn't in the time it takes to write an article, not even that half of that time is spent writing the first few sentences, it's</p>]]></description><link>/running-a-blog-for-almost-nothing/</link><guid isPermaLink="false">744716aa-c37b-48b0-9e0e-32d700a1a547</guid><category><![CDATA[Getting Started]]></category><category><![CDATA[Hosting]]></category><dc:creator><![CDATA[Pavlo Grijincu]]></dc:creator><pubDate>Sat, 21 Jan 2017 04:57:42 GMT</pubDate><content:encoded><![CDATA[<p>Blogging has many benefits, I hear. I don't need to hear many to be sold - I need a low price tag. The blogging cost isn't in the time it takes to write an article, not even that half of that time is spent writing the first few sentences, it's for the machine that must stay up at all times for the visitor.</p>
 
 <p>When you start a blog you agree to obey the unwritten rule of the internet - to never be unavailable. You are not the corner shop that bars the windows at precisely 8 PM, a sign even to the customer with the unexpected emergency. They'd have to seek you personally to buy your services. On the internet you are a content distributor that must be ready to service requests at all times, whether here or half a world away.</p>
 
